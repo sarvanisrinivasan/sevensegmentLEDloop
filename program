@@ -1,0 +1,37 @@
+#include<LPC21xx.h>
+#include"delay.h"
+#define SEG 0Xff
+void disp_digit(int,int);
+unsigned int SEG_LUT[10]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xF8,0X80,0X90};
+int main()
+{
+     int x,y=0;
+     IODIR0=SEG|1<<10|1<<11|1<<12|1<<13; //set the follwing pins to output
+	   while(1)
+		 {
+			    x=10;y=900;
+			    disp_digit(y,x); // will display digits in sevensegment LCD
+		 }
+}
+void disp_digit(int y, int x)
+{
+	    int z,n=0,i=0;
+	    while(y<=999)   
+			{
+				  z=y;
+				  x=10;
+				  n=0;
+       while(n<=3)
+				{
+          IOCLR0=SEG;					
+				  IOSET0=SEG_LUT[z%10];// displays the ultimate digits in each division
+				  IOCLR0=1<<x;
+				  delay_ms(5);
+				  IOSET0=1<<x;
+          z/=10;					
+				  x++;
+					n++;
+			 } 
+			 y++; 			 
+		 }
+}
